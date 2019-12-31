@@ -1,21 +1,30 @@
 import {Button, Container, Text} from 'native-base';
 import React, {useEffect, useState} from 'react';
-import {Alert} from 'react-native';
+import {Alert, ShadowPropTypesIOS} from 'react-native';
 import ListContainer from '../../components/molecules/ListContainer';
 import FixedActionList from '../../components/organisms/FixedActionList';
-import {Action, SelectableAction} from '../../domains/Action';
-import {ActionList, SelectableActionList} from '../../domains/ActionList';
-export default () => {
+import {SelectableActionList} from '../../domains/ActionList';
+import {SelectableAction} from '../../domains/types/Action';
+import {ActionUsecase} from '../../usecases/ActionUsecase';
+import {NavigationStackProp} from 'react-navigation-stack';
+import {DailyTargetActionUsecase} from '../../usecases/DailyTargetActionUsecase';
+import {DailyTargetActionList} from '../../domains/DailyTargetActionList';
+
+interface Props {
+  navigation: NavigationStackProp;
+}
+export default (props: Props) => {
   const [selectableActions, setSelectableActions] = useState(
     new SelectableActionList(),
   );
 
   useEffect(() => {
-    const demo: Action[] = [{text: 'hi'}, {text: 'hallo'}, {text: 'world'}];
-    const actions = new ActionList();
-    actions.actions = demo;
-    setSelectableActions(actions.initializeSelectableActions());
+    loadSelectableActions();
   }, []);
+
+  const loadSelectableActions = async () => {
+    setSelectableActions(await ActionUsecase.loadSelectableActionList());
+  };
 
   const _onPressCard = (action: SelectableAction) => {
     setSelectableActions(selectableActions.toggleSelect(action));
@@ -24,6 +33,11 @@ export default () => {
   const onClickDone = () => {
     const done = () => {
       setSelectableActions(selectableActions.getOnlySelected());
+      const todayTargetActions = new DailyTargetActionList(
+        selectableActions.getOnlySelected(),
+      );
+      DailyTargetActionUsecase.setTodayDailyTarget(todayTargetActions);
+      props.navigation.goBack();
     };
 
     Alert.alert('本日を開始しますか？', 'あとから変更できません。', [

@@ -1,10 +1,15 @@
 import {Form, Textarea, Input, Item} from 'native-base';
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {
+  StyleSheet,
+  NativeSyntheticEvent,
+  TextInputKeyPressEventData,
+} from 'react-native';
 
 interface Props {
   onChangeText: (text: string) => void;
   value: string;
+  onKeyPress: (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void;
 }
 
 export default (props: Props) => {
@@ -12,10 +17,13 @@ export default (props: Props) => {
     <Form>
       <Item regular>
         <Input
+          onKeyPress={props.onKeyPress}
           value={props.value}
           onChangeText={text => props.onChangeText(text)}
           style={styles.textarea}
           placeholder="新しいActionを入力"
+          keyboardType="default"
+          returnKeyType="done"
         />
       </Item>
     </Form>

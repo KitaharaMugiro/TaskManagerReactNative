@@ -8,7 +8,7 @@
     "test": "jest",
     "link": "sudo react-native link",
     "cache-delete": "watchman watch-del-all && rm -rf node_modules && npm install && rm -rf /tmp/metro-bundler-cache-* && rm -rf /tmp/haste-map-react-native-packager-*",
-    "pod-install": "cd ios && pod install"
+    "pod-install": "cd ios && pod install && cd .."
   },
   "dependencies": {
     "@react-native-community/push-notification-ios": "^1.0.3",
@@ -19,9 +19,16 @@
     "react": "16.8.6",
     "react-native": "0.60.5",
     "react-native-chart-kit": "^4.3.0",
+    "react-native-gesture-handler": "^1.5.2",
     "react-native-push-notification": "^3.1.9",
+    "react-native-reanimated": "^1.4.0",
+    "react-native-screens": "^2.0.0-alpha.22",
     "react-native-scrollable-tab-view": "^1.0.0",
-    "react-native-svg": "^9.13.6"
+    "react-native-svg": "^9.13.6",
+    "react-navigation": "^4.0.10",
+    "react-navigation-stack": "^1.10.3",
+    "realm": "^4.0.0-beta.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.5.0",

@@ -1,19 +1,25 @@
-import {Action, SelectableAction} from './Action';
+import {Action, SelectableAction} from './types/Action';
 
 export class ActionList {
+  actions: Action[];
+
+  constructor(actions: Action[]) {
+    this.actions = actions;
+  }
+
   deleteAction(action: Action) {
     const slicedActions = this.actions.filter(a => a !== action);
-    const _actionList = new ActionList();
-    _actionList.actions = slicedActions;
+    const _actionList = new ActionList(slicedActions);
     return _actionList;
   }
-  addAction(text: string) {
-    const _actionList = new ActionList();
-    _actionList.actions = [...this.actions, {text}];
-    return _actionList;
-  }
-  actions: Action[] = [];
 
+  addAction(text: string, actionId: string) {
+    const _actionList = new ActionList([
+      ...this.actions,
+      {title: text, actionId},
+    ]);
+    return _actionList;
+  }
   initializeSelectableActions(): SelectableActionList {
     const actionList = new SelectableActionList();
     actionList.actions = this.actions.map(a => {
@@ -24,6 +30,13 @@ export class ActionList {
 }
 
 export class SelectableActionList {
+  getIds() {
+    return this.actions.map(a => a.actionId);
+  }
+  constructor(actions: SelectableAction[] = []) {
+    this.actions = actions;
+  }
+
   getOnlySelected() {
     const _selectableActions = this.actions.filter(a => a.selected);
     const actionList = new SelectableActionList();

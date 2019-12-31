@@ -1,8 +1,5 @@
 import React, {useState} from 'react';
-import {Container, Header, Content, Button, Text} from 'native-base';
-import ListContainer from '../../components/molecules/ListContainer';
-import {View} from 'react-native';
-import ActionList from '../../components/organisms/ActionList';
+import {NativeSyntheticEvent, TextInputKeyPressEventData} from 'react-native';
 import ActionForm from '../../components/atoms/forms/ActionForm';
 import BottomButtonBar from '../../components/molecules/BottomButtonBar';
 
@@ -11,16 +8,30 @@ interface Props {
 }
 export default (props: Props) => {
   const [typingText, setTypingText] = useState('');
+
   const onClickButton = () => {
     props.addAction(typingText);
     setTypingText('');
+  };
+
+  const onChangeText = (text: string) => {
+    setTypingText(text);
+  };
+
+  const handleKeyDown = (
+    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
+  ) => {
+    if (e.nativeEvent.key == 'Enter') {
+      onClickButton();
+    }
   };
 
   return (
     <>
       <ActionForm
         value={typingText}
-        onChangeText={text => setTypingText(text)}
+        onKeyPress={handleKeyDown}
+        onChangeText={text => onChangeText(text)}
       />
       <BottomButtonBar onClickButton={onClickButton} />
     </>

@@ -3,18 +3,24 @@ import React, {useEffect, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
 import ListContainer from '../../components/molecules/ListContainer';
 import FixedActionList from '../../components/organisms/FixedActionList';
-import {Action, SelectableAction} from '../../domains/Action';
 import {ActionList, SelectableActionList} from '../../domains/ActionList';
+import {SelectableAction} from '../../domains/types/Action';
+import {ActionUsecase} from '../../usecases/ActionUsecase';
+import {DailyTargetActionUsecase} from '../../usecases/DailyTargetActionUsecase';
+import {ProgressUsecase} from '../../usecases/ProgressUsecase';
 export default () => {
   const [selectableActions, setSelectableActions] = useState<
     SelectableActionList
   >(new SelectableActionList());
 
   useEffect(() => {
-    const actions = new ActionList();
-    actions.actions = [{text: 'hi'}, {text: 'hallo'}, {text: 'world'}];
-    setSelectableActions(actions.initializeSelectableActions());
+    loadTodayTargetActions();
   }, []);
+
+  const loadTodayTargetActions = async () => {
+    const actions = await DailyTargetActionUsecase.loadTodayDailyTargetList();
+    setSelectableActions(actions.actionList);
+  };
 
   const _onPressCard = (action: SelectableAction) => {
     setSelectableActions(selectableActions.toggleSelect(action));
@@ -22,7 +28,10 @@ export default () => {
 
   const onClickDone = () => {
     const done = () => {
-      setSelectableActions(selectableActions.getOnlySelected());
+      const doneActions = selectableActions.getOnlySelected();
+      setSelectableActions(doneActions);
+      ProgressUsecase.incrementProgress(doneActions.getIds());
+      DailyTargetActionUsecase.deleteTodayTarget();
     };
 
     Alert.alert('本日を終了しますか？', 'あとから変更できません。', [
@@ -43,7 +52,6 @@ export default () => {
           onPressCard={_onPressCard}
         />
       </ListContainer>
-
       <View style={styles.footer}>
         <View style={styles.container}>
           <Button onPress={onClickDone}>
@@ -58,7 +66,7 @@ export default () => {
 const styles = StyleSheet.create({
   footer: {
     position: 'absolute',
-    bottom: 200,
+    bottom: 30,
     width: '100%',
   },
   container: {

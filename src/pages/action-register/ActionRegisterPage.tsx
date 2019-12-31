@@ -1,19 +1,30 @@
-import {Container, Text} from 'native-base';
-import React, {useState} from 'react';
+import {Container, Text, View} from 'native-base';
+import React, {useEffect, useState} from 'react';
 import ListContainer from '../../components/molecules/ListContainer';
 import ActionFormOrganism from '../../components/organisms/ActionFormOrganism';
-import ActionListView from '../../components/organisms/ActionList';
-import {Action} from '../../domains/Action';
+import ActionListView from '../../components/organisms/DeletableActionList';
 import {ActionList} from '../../domains/ActionList';
-export default () => {
-  const [actions, setActions] = useState<ActionList>(new ActionList());
+import {Action} from '../../domains/types/Action';
+import {ActionUsecase} from '../../usecases/ActionUsecase';
+import {Button} from 'react-native';
+import {NavigationStackProp} from 'react-navigation-stack';
+const HomeScreen = () => {
+  const [actions, setActions] = useState<ActionList>(new ActionList([]));
 
-  const addAction = (text: string) => {
-    setActions(actions.addAction(text));
+  useEffect(() => {
+    loadAction();
+  }, []);
+
+  const loadAction = async () => {
+    setActions(await ActionUsecase.loadActionList());
   };
 
-  const deleteAction = (action: Action) => {
-    setActions(actions.deleteAction(action));
+  const addAction = async (title: string) => {
+    setActions(await ActionUsecase.addAction(actions, title));
+  };
+
+  const deleteAction = async (action: Action) => {
+    setActions(await ActionUsecase.deleteAciton(actions, action));
   };
 
   return (
@@ -29,3 +40,15 @@ export default () => {
     </Container>
   );
 };
+
+HomeScreen.navigationOptions = ({
+  navigation,
+}: {
+  navigation: NavigationStackProp;
+}) => {
+  return {
+    title: 'アクション編集',
+  };
+};
+
+export default HomeScreen;

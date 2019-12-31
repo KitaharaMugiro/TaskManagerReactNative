@@ -1,21 +1,19 @@
-import React, {Component} from 'react';
-import {FlatList, StyleSheet, Text, View, ScrollView} from 'react-native';
+import React from 'react';
+import {StyleSheet, View} from 'react-native';
+import {Action} from '../../domains/types/Action';
 import ActionCard from '../atoms/action-card/DeletableActionCard';
-import {Action} from '../../domains/Action';
+import NormalActionCard from '../atoms/action-card/NormalActionCard';
 
 interface Props {
   actions: Action[];
-  onClickDelete: (action: Action) => void;
 }
 
 export default (props: Props) => {
   const _renderItem = (item: Action, key: any) => {
     return (
-      <ActionCard
-        text={item.text}
-        key={key}
-        onClickDelete={() => props.onClickDelete(item)}
-      />
+      <NormalActionCard text={item.title} leftText="" key={key}>
+        <></>
+      </NormalActionCard>
     );
   };
 

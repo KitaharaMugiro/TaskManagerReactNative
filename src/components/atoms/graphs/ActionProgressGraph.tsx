@@ -4,9 +4,9 @@ import {View} from 'react-native';
 import {ProgressChart} from 'react-native-chart-kit';
 
 interface Props {
-  width: number;
-  height: number;
-  ratio: number;
+  width?: number;
+  height?: number;
+  ratio?: number;
 }
 
 export default (props: Props) => {

@@ -1,21 +1,20 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
-import SelectableActionCard from '../atoms/action-card/SelectableActionCard';
-import {SelectableAction} from '../../domains/types/Action';
+import {Action} from '../../domains/types/Action';
+import ActionCard from '../atoms/action-card/DeletableActionCard';
 
 interface Props {
-  actions: SelectableAction[];
-  onPressCard: (action: SelectableAction) => void;
+  actions: Action[];
+  onClickDelete: (action: Action) => void;
 }
 
 export default (props: Props) => {
-  const _renderItem = (item: SelectableAction, key: any) => {
+  const _renderItem = (item: Action, key: any) => {
     return (
-      <SelectableActionCard
+      <ActionCard
         text={item.title}
-        selected={item.selected}
         key={key}
-        onPressCard={() => props.onPressCard(item)}
+        onClickDelete={() => props.onClickDelete(item)}
       />
     );
   };

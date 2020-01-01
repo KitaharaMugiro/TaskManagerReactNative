@@ -30,6 +30,9 @@ export class ActionList {
 }
 
 export class SelectableActionList {
+  isEmpty() {
+    return this.actions.length === 0;
+  }
   getIds() {
     return this.actions.map(a => a.actionId);
   }

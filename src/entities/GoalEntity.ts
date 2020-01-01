@@ -11,7 +11,7 @@ export class GoalEntity {
   public actionId: string;
   public goalCount: number;
 
-  constructor(actionId: string, goalCount: number = 30) {
+  constructor(actionId: string, goalCount: number = 5) {
     this.actionId = actionId;
     this.goalCount = goalCount;
   }

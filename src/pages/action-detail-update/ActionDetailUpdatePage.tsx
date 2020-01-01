@@ -48,13 +48,18 @@ export default (props: Props) => {
             onChangeText={text => onChangeActionTitle(text)}
           />
         </Item>
-        <Item fixedLabel last>
+        <Item fixedLabel>
           <Label>目標回数</Label>
           <Input
             keyboardType="numeric"
             value={action.getGoalCountString()}
             onChangeText={text => onChangeActionGoal(text)}
           />
+        </Item>
+
+        <Item fixedLabel>
+          <Label>達成回数</Label>
+          <Input value={action.getProgressCountString()} disabled />
         </Item>
       </Form>
     </>

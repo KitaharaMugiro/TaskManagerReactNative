@@ -16,4 +16,5 @@ export type ActionGoal = {
 export type ActionProgress = {
   count: number;
   lastDone: Date;
+  firstDone?: Date;
 };

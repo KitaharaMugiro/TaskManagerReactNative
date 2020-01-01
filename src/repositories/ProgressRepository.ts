@@ -2,18 +2,19 @@ import {ActionProgress} from './../domains/types/Action';
 import {ProgressEntity} from './../entities/ProgressEntity';
 import {RealmHandler} from '../libs/RealmHandler';
 export class ProgressRepository {
-  async incrementProgress(actionId: string) {
+  async incrementProgress(actionId: string, newCount: number, firstDone: Date) {
     const realm = await RealmHandler.openRealm([ProgressEntity.schema]);
     realm.write(() => {
-      const progressEntity:
+      let progressEntity:
         | ProgressEntity
         | undefined = realm.objectForPrimaryKey(
         ProgressEntity.schema.name,
         actionId,
       );
       if (progressEntity) {
-        progressEntity.count += 1;
+        progressEntity.count = newCount;
         progressEntity.lastDate = new Date();
+        progressEntity.firstDone = firstDone;
       }
     });
     RealmHandler.closeRealm(realm);
@@ -36,6 +37,7 @@ export class ProgressRepository {
       actionProgress = {
         count: progressEntity.count,
         lastDone: progressEntity.lastDate,
+        firstDone: progressEntity.firstDone,
       };
     }
     RealmHandler.closeRealm(realm);
@@ -55,6 +57,10 @@ export class ProgressRepository {
       realm.create(ProgressEntity.schema.name, entity);
     });
     RealmHandler.closeRealm(realm);
-    return {count: entity.count, lastDone: entity.lastDate};
+    return {
+      count: entity.count,
+      lastDone: entity.lastDate,
+      firstDone: entity.firstDone,
+    };
   }
 }

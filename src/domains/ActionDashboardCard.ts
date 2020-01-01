@@ -1,6 +1,16 @@
 import {Action, ActionGoal, ActionProgress} from './types/Action';
 
 export class ActionDashboardCard {
+  getFirstDone(): string {
+    if (this.progress.firstDone) {
+      return String(this.progress.firstDone);
+    } else {
+      return '未達成';
+    }
+  }
+  getProgressCountString(): string {
+    return String(this.progress.count);
+  }
   setGoal(number: number): ActionDashboardCard {
     this.goal.count = number;
     return new ActionDashboardCard(this.action, this.goal, this.progress);
@@ -27,9 +37,12 @@ export class ActionDashboardCard {
   }
 
   private getSuccessiveDays() {
-    const diffTime = new Date().getTime() - this.progress.lastDone.getTime();
+    if (!this.progress.firstDone) {
+      return 0;
+    }
+    const diffTime = new Date().getTime() - this.progress.firstDone.getTime();
     const diffDays = diffTime / (1000 * 3600 * 24);
-    return Math.round(diffDays);
+    return Math.round(diffDays) + 1;
   }
 
   displaySuccessiveDays(): string {

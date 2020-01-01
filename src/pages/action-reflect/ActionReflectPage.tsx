@@ -1,14 +1,19 @@
 import {Button, Container, Text} from 'native-base';
 import React, {useEffect, useState} from 'react';
 import {Alert, StyleSheet, View} from 'react-native';
+import {NavigationStackProp} from 'react-navigation-stack';
 import ListContainer from '../../components/molecules/ListContainer';
 import FixedActionList from '../../components/organisms/FixedActionList';
-import {ActionList, SelectableActionList} from '../../domains/ActionList';
+import {SelectableActionList} from '../../domains/ActionList';
 import {SelectableAction} from '../../domains/types/Action';
-import {ActionUsecase} from '../../usecases/ActionUsecase';
 import {DailyTargetActionUsecase} from '../../usecases/DailyTargetActionUsecase';
 import {ProgressUsecase} from '../../usecases/ProgressUsecase';
-export default () => {
+
+interface Props {
+  navigation: NavigationStackProp;
+}
+
+export default (props: Props) => {
   const [selectableActions, setSelectableActions] = useState<
     SelectableActionList
   >(new SelectableActionList());
@@ -32,6 +37,7 @@ export default () => {
       setSelectableActions(doneActions);
       ProgressUsecase.incrementProgress(doneActions.getIds());
       DailyTargetActionUsecase.deleteTodayTarget();
+      props.navigation.goBack();
     };
 
     Alert.alert('本日を終了しますか？', 'あとから変更できません。', [

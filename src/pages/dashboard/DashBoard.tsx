@@ -1,20 +1,17 @@
-import {Text, Button, View} from 'native-base';
+import {Button, Text, View} from 'native-base';
 import React, {useEffect, useState} from 'react';
-import ListContainer from '../../components/molecules/ListContainer';
-import GraphCardList from '../../components/organisms/GraphCardList';
+import {ScrollView, StyleSheet} from 'react-native';
+import {NavigationStackProp} from 'react-navigation-stack';
+import DashboardActionList from '../../components/organisms/DashboardActionList';
+import TodayTargetActionList from '../../components/organisms/TodayTargetActionList';
+import {colors} from '../../constants/color';
+import {PageName} from '../../constants/page-names';
 import {ActionDashboardCard} from '../../domains/ActionDashboardCard';
 import {ActionDashboardCardList} from '../../domains/ActionDashboardCardList';
-import {NavigationStackProp} from 'react-navigation-stack';
-import {DashBoardActionUsecase} from '../../usecases/DashBoardActionUsecase';
-import {ScrollView} from 'react-native';
-import {PageName} from '../../constants/page-names';
-import {StyleSheet} from 'react-native';
-import {colors} from '../../constants/color';
-import DashboardActionList from '../../components/organisms/DashboardActionList';
-import {DailyTargetActionList} from '../../domains/DailyTargetActionList';
-import TodayTargetActionList from '../../components/organisms/TodayTargetActionList';
 import {SelectableActionList} from '../../domains/ActionList';
+import {DailyTargetActionList} from '../../domains/DailyTargetActionList';
 import {DailyTargetActionUsecase} from '../../usecases/DailyTargetActionUsecase';
+import {DashBoardActionUsecase} from '../../usecases/DashBoardActionUsecase';
 interface Props {
   navigation: NavigationStackProp;
 }
@@ -64,16 +61,32 @@ export default (props: Props) => {
     props.navigation.push(PageName.ActionReflect);
   };
 
+  const renderTargetActionList = () => {
+    if (todayActions.isEmpty()) return;
+    return (
+      <View style={styles.paddingBottom}>
+        <TodayTargetActionList
+          actions={todayActions}
+          listTitle={'今日やること'}
+          onClickCheckout={onClickCheckout}
+        />
+      </View>
+    );
+  };
+
+  const renderStartTodayButton = () => {
+    if (actions.isEmpty()) return;
+    return (
+      <Button style={styles.floating} onPress={onClickStartToday}>
+        <Text>今日を始める</Text>
+      </Button>
+    );
+  };
+
   return (
     <>
       <ScrollView>
-        <View style={styles.paddingBottom}>
-          <TodayTargetActionList
-            actions={todayActions}
-            listTitle={'今日やること'}
-            onClickCheckout={onClickCheckout}
-          />
-        </View>
+        {renderTargetActionList()}
 
         <DashboardActionList
           listTitle={'やりたいことリスト'}
@@ -83,9 +96,7 @@ export default (props: Props) => {
         />
       </ScrollView>
 
-      <Button style={styles.floating} onPress={onClickStartToday}>
-        <Text>今日を始める</Text>
-      </Button>
+      {renderStartTodayButton()}
     </>
   );
 };

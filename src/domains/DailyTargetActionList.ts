@@ -2,6 +2,9 @@ import {SelectableActionList} from './ActionList';
 import {Action} from './types/Action';
 
 export class DailyTargetActionList {
+  isEmpty() {
+    return this.actionList.isEmpty();
+  }
   actionList: SelectableActionList;
 
   getIds() {
